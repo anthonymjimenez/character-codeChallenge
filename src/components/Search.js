@@ -1,22 +1,29 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
+import CharCard from "../components/CharCard";
 
 export default function Search({chars}) {
-   const [search, setSearch] = useState([])
+   const [search, setSearchResults] = useState([])
    const [searchTerm, setTerm] = useState(null)
     
-   const handleSearch = (e) => {
-       setTerm(e.target.value)
+   useEffect(() => {
+    searchTerm === ""
+      ? setSearchResults([])
+      : setSearchResults(
+          chars
+            .filter((c) => c.name.includes(searchTerm))
+            .map((c) => c)
+        );
+  }, [searchTerm, chars]);
 
-       chars.map(elm => {
-           if(elm.name == searchTerm) {
-               setSearch(search => search.push(searchTerm))
-           }
-       })
-   }
   return (
       <>
-      <input type='text' value={searchTerm} onChange={(e) => handleSearch(e) } />
-      {search}
+      <hr/>
+      <br/>
+      <h3>Search</h3>
+      <input type='text' value={searchTerm} onChange={(e) => setTerm(e.target.value)} />
+      <hr/> <br/>
+      {search.map(({name, img, show}) => <CharCard name={name} img={img} show={show} />
+)}
     </>
       )
 }
